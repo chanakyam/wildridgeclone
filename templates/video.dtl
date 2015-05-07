@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html ng-app="wildridgeclone">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Wildridge</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script language="javascript" src="js/html5.js"></script>
+<script type='text/javascript' src='/js/jquery-1.7.1.min.js'></script>    
+<script src="/js/angular.min.js"></script>
+<script src="/js/controllers.js"></script>   
+<script src="/js/ui-bootstrap-tpls-0.6.0.js"></script>
+<script src="/js/jwplayer-5.9.js"></script>
+<script>
+$(document).ready(function() {
+      jwplayer('play_trailor').setup({
+                  "flashplayer": "http://player.longtailvideo.com/player.swf",
+                  "playlist": [
+                    {
+                      "file": "http://video.contentapi.ws/{{allnews.video}}"
+                    }
+                  ],
+                  stretching: "exactfit",
+                  "width": 680,
+                  "height": 330,
+                  skin: "http://content.longtailvideo.com/skins/glow/glow.zip",
+                  autostart: false,
+                  "controlbar": {
+                    "position": "bottom"
+                  },
+                  "plugins": {
+                     "autoPlay": false,
+                    "ova-jw": {
+                      "ads": {
+                        // "companions": {
+                        //   "regions": [
+                        //     {
+                        //       "id": "companion",
+                        //       "width": 80,
+                        //       "height": 300
+                        //     }
+                        //   ]
+                        // },
+                        "schedule": [
+                          {
+                            "position": "pre-roll",
+                            // "tag": updateURL(vastURI)
+                            "tag": "http://ad4.liverail.com/?LR_PUBLISHER_ID=44293&LR_SCHEMA=vast2-vpaid"
+                          }
+                        ]
+                      },
+                      "debug": {
+                        "levels": "none"
+                      }
+                    }
+                  }
+                });
+});
+</script>
+</head>
+
+<body ng-controller="WildridgecloneHome" ng-cloak>
+<a name="top"></a>
+<header>
+	<div class="container">
+		<a href="/" title="Wildridge" class="logo"><img src="images/logo.png" alt=""></a>
+		<div class="TopRight">
+			<a href="#"><img src="images/home.png"></a>
+			<a href="#"><img src="images/inbox.png"></a>
+		</div>
+		<!-- TopRight end -->
+	<span class="clear"></span>
+	</div>
+</header>
+<!-- header end -->
+
+ 
+
+<nav>
+	<div class="container">
+		<div class="menu"> <span>MENU</span>
+	      <ul class="Navigation">
+	        <li> <a href="/" title="Now!">Now!</a> </li>
+	        <li><a href="/more_news?c=World&p=1" title="World News">World News</a></li>
+	        <li><a href="/more_news?c=Politics&p=1" title="US  Politics">US  Politics</a></li>
+	        <li><a href="/more_news?c=Entertainment&p=1" title="Entertainment">Entertainment</a></li>
+	        <li><a href="/more_news?c=Markets&p=1" title="Markets">Markets</a></li>
+	        <li><a href="/more_news?c=Money&p=1" title="Money">Money</a></li>
+	        <li><a href="#" title="Contact Us">Contact Us</a></li>    
+	      </ul>
+    </div>
+		<!-- menu end --> 
+	</div>
+	
+	<span class="clear"></span>
+</nav>
+<!-- nav end -->
+
+
+<div class="container">
+	<div class="topbanner">
+		<img src="images/topbanner.jpg" alt="">
+	</div>
+
+	<div class="slideshow">
+		<div class="slider">
+			<input type="hidden" name="vide_val" id="video_val" value="{{videoParam.video}}">
+      		<div id="trailor" ng-init="loadVideo()">Loading the player...</div>
+		</div>
+	
+		<div class="slideshow-rt">
+			<div class="slideshow-title">
+				{{videoParam.title}}
+			</div>
+			<div class="slideshow-description">
+				{{videoParam.description}}
+			</div>
+		</div>
+		
+		<span class="clear"></span>	
+		</div><br>
+	<!-- slideshow end -->
+	
+</div>
+
+<div class="futures">
+	<div class="container">
+		<div class="futures-title">Trending Videos <a href="/more_videos?c=by_id_title_desc_thumb_date&p=1" class="right more">more Videos ...</a></div>
+		
+		<div class="VideDiv" ng-repeat="n in latestVideos" ng-cloak>
+			<div class="video">
+				<a href="/video?id={% verbatim %}{{ n.id }}{% endverbatim %}">
+				<img src="http://img.contentapi.ws/{% verbatim %}{{ n.thumb_image }}{% endverbatim %}" alt="">
+				<span class="videotext"></span>
+				</a>
+			</div>
+			<div class="video-description">{% verbatim %}{{ n.title.substr(0, 40) }}{% endverbatim %}...</div>
+		</div>
+		<!-- VideDiv end -->		
+		
+		<span class="clear"></span>
+	</div>
+	<!-- Trending Videos module end -->
+	</div>
+</div><!-- Futures Div End -->
+
+
+<section class="contentarea">
+	<div class="container">
+	
+	<aside class="leftcontent">
+  
+  <div class="module">
+    <div class="module-title">{{allnews.title}}</div>
+    <div id="play_trailor" >Loading the player...</div>
+      <div class="description margin10_T">{{allnews.description}}
+      <p class="date">{{ allnews.upload_date }}</p></div>
+	
+	<span class="clear"></span>
+	</div>
+  <!-- World News module end -->
+  
+
+	<div class="module">
+    <div class="module-title">Us News</div>
+    <div class="col-1">
+      <div class="thumbnail">
+      	<a href="/more?id={% verbatim %}{{ USNews[0].id }}{% endverbatim %}" title="{% verbatim %}{{ USNews[0].title }}{% endverbatim %}">
+      	<img src="http://img.contentapi.ws/{% verbatim %}{{ USNews[0].view_image }}{% endverbatim %}" alt="">
+      	</a>
+      </div>
+      <div class="description margin20_T">
+      	<a href="/more?id={% verbatim %}{{ USNews[0].id }}{% endverbatim %}">
+	  	<div class="news-title">{% verbatim %}{{ USNews[0].title }}{% endverbatim %} </div>
+		{% verbatim %}{{ USNews[0].description }}{% endverbatim %} 
+		<p class="date">{% verbatim %}{{ worldNews[0].upload_date }}{% endverbatim %}</p>
+		</a>
+	  </div>
+    </div>
+    <!-- col-1 end -->
+	
+    <div class="col-2">
+		<div class="newsrow" ng-repeat="n in USNews" ng-show="!$first">
+			<div class="thumbdiv">
+				<a href="/more?id={% verbatim %}{{ n.id }}{% endverbatim %}" title="{% verbatim %}{{ n.title }}{% endverbatim %}">
+					<img src="http://img.contentapi.ws/{% verbatim %}{{ n.thumb_image }}{% endverbatim %}" alt="">
+				</a>
+			</div>
+			<div class="newscontent">
+				<a href="/more?id={% verbatim %}{{ n.id }}{% endverbatim %}">
+				<p class="date">{% verbatim %}{{ n.upload_date }}{% endverbatim %}</p>
+				<div class="news-title">{% verbatim %}{{ n.title }}{% endverbatim %}</div>
+				<p>{% verbatim %}{{ n.description }}{% endverbatim %}</p>
+				</a>
+			</div>
+		</div><!-- News Row end -->	
+		
+		<a href="/more_news?c=US&p=1" class="right more">more news ...</a>
+    </div> <!-- col-2 end --> 
+	
+	<span class="clear"></span>
+	</div>
+  <!-- Us News module end -->
+  
+  <div class="module">
+    <div class="module-title">Politics</div>
+    <div class="col-1">
+      <div class="thumbnail">
+      	<a href="/more?id={% verbatim %}{{ PoliticsNews[0].id }}{% endverbatim %}" title="{% verbatim %}{{ PoliticsNews[0].title }}{% endverbatim %}">
+      	<img src="http://img.contentapi.ws/{% verbatim %}{{ PoliticsNews[0].view_image }}{% endverbatim %}" alt="">
+      	</a>
+      </div>
+      <div class="description margin20_T">
+      	<a href="/more?id={% verbatim %}{{ PoliticsNews[0].id }}{% endverbatim %}" title="{% verbatim %}{{ PoliticsNews[0].title }}{% endverbatim %}">
+	  	<div class="news-title">{% verbatim %}{{ PoliticsNews[0].title }}{% endverbatim %} </div>
+		{% verbatim %}{{ PoliticsNews[0].description }}{% endverbatim %} 
+		<p class="date">{% verbatim %}{{ PoliticsNews[0].upload_date }}{% endverbatim %}</p>
+		</a>
+	  </div>
+    </div>
+    <!-- col-1 end -->
+	
+    <div class="col-2">
+		<div class="newsrow" ng-repeat="n in PoliticsNews" ng-show="!$first">
+			<div class="thumbdiv">
+				<a href="/more?id={% verbatim %}{{ n.id }}{% endverbatim %}" title="{% verbatim %}{{ n.title }}{% endverbatim %}">
+					<img src="http://img.contentapi.ws/{% verbatim %}{{ n.thumb_image }}{% endverbatim %}" alt="">
+				</a>
+			</div>
+			<div class="newscontent">
+				<a href="/more?id={% verbatim %}{{ n.id }}{% endverbatim %}">
+				<p class="date">{% verbatim %}{{ n.upload_date }}{% endverbatim %}</p>
+				<div class="news-title">{% verbatim %}{{ n.title }}{% endverbatim %}</div>
+				<p>{% verbatim %}{{ n.description }}{% endverbatim %}</p>
+				</a>
+			</div>
+		</div><!-- News Row end -->		
+		
+		<a href="/more_news?c=Politics&p=1" class="right more">more news ...</a>
+    </div> <!-- col-2 end --> 
+	
+	<span class="clear"></span>
+	</div>
+  <!-- Politics module end -->
+  
+  
+</aside>
+
+
+	<aside class="sidebar">
+		<div class="rightad"><img src="images/right-ad1.jpg" alt=""></div>
+		
+		<div class="module margin20_T">
+			<div class="module-title">Us Markets</div>
+			
+			<div class="newsrow" ng-repeat="n in USMarkets">
+				<p class="date">{% verbatim %}{{ n.upload_date }}{% endverbatim %}</p>
+				<a href="/more?id={% verbatim %}{{ n.id }}{% endverbatim %}">
+				<p>{% verbatim %}{{ n.title }}{% endverbatim %}</p>
+				</a>
+			</div><!-- News Row end -->		
+		
+		<a href="/more_usmarkets?c=Markets&p=1" class="right more">more news ...</a>
+		<span class="clear"></span>
+		</div>
+		<!-- Us Markets module end -->
+		
+		
+  
+  <div class="module twitterposts">
+        <!--<div class="module-title">Latest Tweets</div>
+         <div class="FieldLeft">
+          <div class="twitter-cont">
+            <p><img src="images/small-thumb1.jpg"></p>
+            <p><strong class="blue">Rob Fee@</strong>robfee</p>
+            <p>I wish every episode of Breaking Bad started with the cast playing in a fountain like on Friends.</p>
+            <p class="gray margin20_T small"><img align="absmiddle" src="images/twitter-small.png"> 7:35 AM - 19 Aug 13</p>
+            <p class="gray small"><img align="absmiddle" src="images/reply.png"> Reply <span class="right"><img align="absmiddle" src="images/retweet.png"> Retweet</span></p>
+            <p class="gray small"><img align="absmiddle" src="images/favorite.png"> Favorite</p>
+          </div>
+          
+          <div class="twitter-cont">
+            <p><img src="images/small-thumb1.jpg"></p>
+            <p><strong class="blue">Rob Fee@</strong>robfee</p>
+            <p>I wish every episode of Breaking Bad started with the cast playing in a fountain like on Friends.</p>
+            <p class="gray margin20_T small"><img align="absmiddle" src="images/twitter-small.png"> 7:35 AM - 19 Aug 13</p>
+            <p class="gray small"><img align="absmiddle" src="images/reply.png"> Reply <span class="right"><img align="absmiddle" src="images/retweet.png"> Retweet</span></p>
+            <p class="gray small"><img align="absmiddle" src="images/favorite.png"> Favorite</p>
+          </div>
+        </div>
+		 -->
+        <div class="center"><img src="images/ad-160x600.jpg"></div>
+      </div>
+    
+    <span class="clear"></span>
+  
+
+	<div class="rightad margin10_T"><img src="images/right-ad2.jpg" alt=""></div>
+
+ 
+</aside>
+
+<span class="clear"></span>
+
+
+	
+</section>
+  
+</div>
+<!-- container end -->
+
+<div class="bottom">
+	<div class="container ad1"><img src="images/ad1.jpg" alt=""></div>
+	<a href="#top" class="top"><img src="images/top.png" alt="" border="0"></a></div>
+
+
+<footer>
+	<div class="container">
+		<span class="left">Copyright &copy; 2014 Wildridge. All Rights Reserved | 2014 Wildridge. All Rights Reserved | <a href="/tnc" >Terms & Conditions</a></span>
+        <span class="right"><a href="#"><img src="images/facebook.png"></a> <a href="#"><img src="images/twitter.png"></a></span>
+    </div>
+    <!-- container end -->
+	
+	<span class="clear"></span>
+</footer>
+<!-- footer end -->
+</body>
+</html>
